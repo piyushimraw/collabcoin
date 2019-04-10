@@ -1,0 +1,85 @@
+pragma solidity >=0.4.22 <0.7.0;
+contract Campign {
+  struct Request {
+    string description;
+    uint value;
+    address payable beneficiary;
+    mapping(address => bool) approvers;
+    uint approversCount;
+    bool completed;
+  }
+  address public manager;
+  uint public minimumVal;
+  mapping(address => bool) contributors;
+  uint public contributorCount;
+  uint public requestCount;
+  mapping(uint => Request) requests;
+
+  constructor( uint value, address sender ) public {
+    manager = sender;
+    minimumVal = value;
+  }
+
+  function isContributed (address sender) private view returns(bool){
+    return contributors[sender];
+  }
+
+  function contribute () public payable {
+    require(msg.value > minimumVal, 'Contribution should be greater that minimum value');
+    if(isContributed(msg.sender) == false){
+      contributors[msg.sender] = true;
+      uint count = contributorCount;
+      count = count + 1;
+      contributorCount = count;
+    }
+  }
+
+  function getRequest(uint id) public view returns(string memory _desc, uint _val, address _beneficary, uint _contribCount, bool isCompleted) {
+    Request memory tempRequest = requests[id];
+    return (tempRequest.description,tempRequest.value, tempRequest.beneficiary, tempRequest.approversCount, tempRequest.completed);
+  }
+
+  function createRequest(string memory desc, uint val, address payable ben) public {
+    require(msg.sender == manager, "only manager can create a request");
+    Request memory tempreq = Request(desc, val, ben, 0, false);
+    uint newrequestCount = requestCount;
+    newrequestCount = newrequestCount + 1;
+    requestCount = newrequestCount;
+    requests[requestCount] = tempreq;
+  }
+
+}
+
+
+contract CampignFactory {
+    Campign[] public campigns;
+
+    function createNewCampign(uint value)public{
+        Campign newCampign = new Campign(value, msg.sender);
+        campigns.push(newCampign);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
