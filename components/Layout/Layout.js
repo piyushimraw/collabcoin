@@ -12,9 +12,11 @@ export default class Layout extends Component {
         <Menu>
           <Menu.Item header link>
             <Link href="/">
-              <div>
-                <Icon name="viacoin" color="teal" size="large" /> CrowdCoin
-              </div>
+              <a>
+                <div>
+                  <Icon name="viacoin" color="teal" size="large" /> CrowdCoin
+                </div>
+              </a>
             </Link>
           </Menu.Item>
         </Menu>

@@ -8,6 +8,7 @@ import {
   Message,
   Icon
 } from 'semantic-ui-react';
+import Router from 'next/router';
 import factory from '../../ethereum/facotory';
 import Layout from '../../components/Layout/Layout';
 import web3 from '../../ethereum/web3';
@@ -47,14 +48,16 @@ export default class New extends Component {
           )
           .on('confirmation', (number, reciept) =>
             this.setState({
-              message: `${number} out of 24 confirmations Done!!`
+              message: `${number} out of 10 confirmations Done!!`
             })
           )
-          .then(() => this.setState({ loading: false }));
+          .then(() => {
+            this.setState({ loading: false });
+            Router.replace('/');
+          });
       }
     } catch (e) {
-      console.log(e);
-      this.setState({ loading: false });
+      this.setState({ loading: false, error: e.message });
     }
   };
   render() {
