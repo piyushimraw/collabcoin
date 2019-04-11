@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Link from 'next/link';
+import { Header, Grid, Button, Icon } from 'semantic-ui-react';
 import factory from '../ethereum/facotory';
 import web3 from '../ethereum/web3';
 import Layout from '../components/Layout/Layout';
@@ -11,18 +13,35 @@ export default class show extends Component {
     const campigns = [];
     for (let i = 0; i < campignCountNum; i++) {
       const campign = await factory.methods.campigns(i).call();
-      console.log(campign);
       campigns.push(campign);
     }
     return { campignCount, campigns };
   }
   render() {
     const { campignCount, campigns } = this.props;
-    console.log(campigns);
     return (
       <Layout>
-        <CampignCard campigns={campigns} />
-        <div>No of Campigns {web3.utils.hexToNumber(campignCount._hex)}</div>
+        <Header as="h2">
+          Campigns
+          <Header.Subheader>
+            All current campigns are displayed here.
+          </Header.Subheader>
+        </Header>
+        <Grid>
+          <Grid.Column width={13}>
+            <CampignCard campigns={campigns} />
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <Link href="/campign/new">
+              <a>
+                <Button color="teal">
+                  <Icon name="add circle" />
+                  Add Campign
+                </Button>
+              </a>
+            </Link>
+          </Grid.Column>
+        </Grid>
       </Layout>
     );
   }
