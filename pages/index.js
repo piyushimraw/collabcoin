@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import factory from '../ethereum/facotory';
 import web3 from '../ethereum/web3';
+import Layout from '../components/Layout/Layout';
 import CampignCard from '../components/CampignCard';
 
 export default class show extends Component {
@@ -19,10 +20,10 @@ export default class show extends Component {
     const { campignCount, campigns } = this.props;
     console.log(campigns);
     return (
-      <div>
+      <Layout>
         <CampignCard campigns={campigns} />
         <div>No of Campigns {web3.utils.hexToNumber(campignCount._hex)}</div>
-      </div>
+      </Layout>
     );
   }
 }

@@ -10,7 +10,13 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <style>{`body { margin: 0 } /* custom! */`}</style>
+          <style>{`body { margin: 0 }
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+          /* custom! */`}</style>
           <link
             rel="stylesheet"
             href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
