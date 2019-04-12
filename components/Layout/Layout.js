@@ -9,8 +9,8 @@ export default class Layout extends Component {
         <Head>
           <title>CollabCoin</title>
         </Head>
-        <Menu>
-          <Menu.Item header link>
+        <Menu size='massive'>
+          <Menu.Item header link >
             <Link href="/">
               <a>
                 <div>

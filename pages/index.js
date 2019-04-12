@@ -21,10 +21,10 @@ export default class show extends Component {
     const { campignCount, campigns } = this.props;
     return (
       <Layout>
-        <Header as="h2">
-          Campigns
+        <Header as="h3">
+          Campaigns
           <Header.Subheader>
-            All current campigns are displayed here.
+            All current campaigns are displayed here.
           </Header.Subheader>
         </Header>
         <Grid>
