@@ -2,4 +2,5 @@ const routes = require('next-routes');
 
 module.exports = routes()
   .add('/campign/new', '/campign/new')
-  .add('/campign/:address', '/campign/show');
+  .add('/campign/:address', '/campign/show')
+  .add('/campign/:address/requests', '/campign/requests');

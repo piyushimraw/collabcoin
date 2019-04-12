@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'next/router';
+import Router, { withRouter } from 'next/router';
 import { Grid, Header, Card, Placeholder } from 'semantic-ui-react';
 import PlaceHolderCard from '../../components/PlaceholderCard';
 import ContributeForm from '../../components/ContributeForm';
@@ -131,6 +131,11 @@ class Show extends Component {
                   cardDesc={balance}
                 />
                 <PlaceHolderCard
+                  onClick={() =>
+                    Router.replace(`
+                  /campign/${query.address}/requests
+                  `)
+                  }
                   loading={loading}
                   cardHeader="Requests"
                   cardMeta={`total request`}

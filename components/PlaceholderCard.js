@@ -6,10 +6,10 @@ export default function PlaceholderCard({
   cardMeta,
   cardDesc,
   address,
-  onClick
+  onClick = () => {}
 }) {
   return (
-    <Card raised link>
+    <Card raised link onClick={onClick}>
       <Card.Content>
         {loading ? (
           <>
@@ -22,7 +22,9 @@ export default function PlaceholderCard({
           <>
             <Card.Header>{cardHeader}</Card.Header>
             {cardMeta && <Card.Meta>{cardMeta}</Card.Meta>}
-            {cardDesc && <Card.Description>{cardDesc} </Card.Description>}
+            {typeof cardDesc !== 'undefined' && (
+              <Card.Description>{cardDesc}</Card.Description>
+            )}
           </>
         )}
       </Card.Content>
