@@ -20,10 +20,10 @@ export default class ContributeForm extends Component {
             placeholder={`minimum amount ${minimumAmount}`}
           >
             <input />
-            <Label>wei</Label>
+            <Label>eth</Label>
           </Input>
         </Form.Field>
-        <Button color="teal" onClick={() => contribute(value)}>
+        <Button color="teal" onClick={() => contribute(value)} role="submit">
           Contribute
         </Button>
       </Form>

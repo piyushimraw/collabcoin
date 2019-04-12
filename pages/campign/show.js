@@ -13,7 +13,8 @@ class Show extends Component {
     manager: '',
     balance: '',
     contributorCount: '',
-    requestCount: ''
+    requestCount: '',
+    minimumVal: ''
   };
   async componentDidMount() {
     const { router } = this.props;
@@ -26,19 +27,38 @@ class Show extends Component {
       const contributorCountHex = await CampaingInstance.methods
         .contributorCount()
         .call();
+      const minimumVal = await CampaingInstance.methods.minimumVal().call();
       const contributorCount = web3.utils.hexToNumber(contributorCountHex._hex);
       const requestCount = web3.utils.hexToNumber(request._hex);
       this.setState({
         loading: false,
         manager,
-        balance,
+        balance: web3.utils.fromWei(balance, 'ether'),
         requestCount,
+        minimumVal: web3.utils.hexToNumberString(minimumVal._hex),
         contributorCount
       });
     } catch (e) {}
   }
 
-  contribute = async value => {};
+  contribute = async value => {
+    const newValue = web3.utils.toWei(value, 'ether');
+    const { router } = this.props;
+    const { query } = router;
+    const CampaingInstance = Campign(query.address);
+    try {
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+      if (accounts.length !== 0) {
+        await CampaingInstance.methods.contribute().send({
+          from: accounts[0],
+          value: newValue
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   render() {
     const { router } = this.props;
     const { query } = router;
@@ -47,6 +67,7 @@ class Show extends Component {
       manager,
       balance,
       contributorCount,
+      minimumVal,
       requestCount
     } = this.state;
     return (
@@ -90,7 +111,10 @@ class Show extends Component {
               </Card.Group>
             </Grid.Column>
             <Grid.Column width="3">
-              <ContributeForm />
+              <ContributeForm
+                minimumAmount={minimumVal}
+                contribute={this.contribute}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>

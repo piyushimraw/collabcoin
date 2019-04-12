@@ -77,9 +77,9 @@ export default class New extends Component {
               onChange={e => this.setState({ minimumAmount: e.target.value })}
               label={
                 <Dropdown
-                  defaultValue="wei"
+                  defaultValue="eth"
                   options={[
-                    { key: 'wei', text: 'wei', value: 'wei' },
+                    { key: 'eth', text: 'eth', value: 'eth' },
                     { key: 'kwei', text: 'kwei', value: 'kwei' }
                   ]}
                 />
