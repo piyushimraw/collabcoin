@@ -5,6 +5,7 @@ const provider = new Web3.providers.HttpProvider(
 let web3 = new Web3(provider, null, { transactionConfirmationBlocks: 10 });
 
 if (typeof window !== 'undefined') {
+  if(typeof window.ethereum !== 'undefined')
   web3 = new Web3(window.ethereum, null, { transactionConfirmationBlocks: 10 });
 }
 
