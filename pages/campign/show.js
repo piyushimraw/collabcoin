@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'next/router';
 import { Grid, Header, Card, Placeholder } from 'semantic-ui-react';
 import PlaceHolderCard from '../../components/PlaceholderCard';
+import ContributeForm from '../../components/ContributeForm';
 import Layout from '../../components/Layout/Layout';
 import Campign from '../../ethereum/Campign';
 import web3 from '../../ethereum/web3';
@@ -36,6 +37,8 @@ class Show extends Component {
       });
     } catch (e) {}
   }
+
+  contribute = async value => {};
   render() {
     const { router } = this.props;
     const { query } = router;
@@ -58,7 +61,7 @@ class Show extends Component {
             </Header>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width="12">
+            <Grid.Column width="13">
               <Card.Group itemsPerRow="2">
                 <PlaceHolderCard
                   loading={loading}
@@ -75,7 +78,8 @@ class Show extends Component {
                 <PlaceHolderCard
                   loading={loading}
                   cardHeader="Requests"
-                  cardMeta={`total request ${requestCount}`}
+                  cardMeta={`total request`}
+                  cardDesc={requestCount}
                 />
                 <PlaceHolderCard
                   loading={loading}
@@ -84,6 +88,9 @@ class Show extends Component {
                   cardDesc={contributorCount}
                 />
               </Card.Group>
+            </Grid.Column>
+            <Grid.Column width="3">
+              <ContributeForm />
             </Grid.Column>
           </Grid.Row>
         </Grid>

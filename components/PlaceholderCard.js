@@ -4,10 +4,12 @@ export default function PlaceholderCard({
   loading,
   cardHeader,
   cardMeta,
-  cardDesc
+  cardDesc,
+  address,
+  onClick
 }) {
   return (
-    <Card raised>
+    <Card raised link>
       <Card.Content>
         {loading ? (
           <>
