@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "next": "^8.0.4",
+    "next-routes": "^1.4.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "semantic-ui-css": "^2.4.1",
@@ -13,7 +14,7 @@
   "author": "piyushimraw <piyush.srivastavaimraw@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
     "now-build": "next build",
     "start": "next start"
