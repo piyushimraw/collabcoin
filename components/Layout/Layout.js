@@ -9,9 +9,9 @@ export default class Layout extends Component {
         <Head>
           <title>CollabCoin</title>
         </Head>
-        <Menu size='massive'>
-          <Menu.Item header link >
-            <Link href="/">
+        <Menu size="massive">
+          <Menu.Item header link>
+            <Link href="/" prefetch>
               <a>
                 <div>
                   <Icon name="viacoin" color="teal" size="large" /> CrowdCoin

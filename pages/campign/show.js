@@ -14,7 +14,9 @@ class Show extends Component {
     balance: '',
     contributorCount: '',
     requestCount: '',
-    minimumVal: ''
+    minimumVal: '',
+    submitting: false,
+    submissionMessage: ''
   };
   async componentDidMount() {
     const { router } = this.props;
@@ -42,21 +44,50 @@ class Show extends Component {
   }
 
   contribute = async value => {
+    this.setState({
+      submitting: true
+    });
     const newValue = web3.utils.toWei(value, 'ether');
     const { router } = this.props;
     const { query } = router;
     const CampaingInstance = Campign(query.address);
     try {
       const accounts = await web3.eth.getAccounts();
-      console.log(accounts);
       if (accounts.length !== 0) {
-        await CampaingInstance.methods.contribute().send({
-          from: accounts[0],
-          value: newValue
+        await CampaingInstance.methods
+          .contribute()
+          .send({
+            from: accounts[0],
+            value: newValue
+          })
+          .on('transactionHash', hash => {
+            this.setState({
+              submissionMessage: `trasaction is being hashed ${hash}`
+            });
+          })
+          .on('confirmation', (number, reciept) =>
+            this.setState({
+              submissionMessage: `${number} out of 10 confirmations Done!!`
+            })
+          );
+        const contributorCountHex = await CampaingInstance.methods
+          .contributorCount()
+          .call();
+        const balance = await web3.eth.getBalance(query.address);
+        const contributorCount = web3.utils.hexToNumber(
+          contributorCountHex._hex
+        );
+        this.setState({
+          submitting: false,
+          balance: web3.utils.fromWei(balance, 'ether'),
+          contributorCount,
+          submissionMessage: ''
         });
       }
     } catch (e) {
-      console.log(e);
+      this.setState({
+        submitting: false
+      });
     }
   };
   render() {
@@ -68,8 +99,11 @@ class Show extends Component {
       balance,
       contributorCount,
       minimumVal,
-      requestCount
+      requestCount,
+      submitting,
+      submissionMessage
     } = this.state;
+    submissionMessage;
     return (
       <Layout>
         <Grid>
@@ -114,6 +148,8 @@ class Show extends Component {
               <ContributeForm
                 minimumAmount={minimumVal}
                 contribute={this.contribute}
+                submitting={submitting}
+                submissionMessage={submissionMessage}
               />
             </Grid.Column>
           </Grid.Row>
