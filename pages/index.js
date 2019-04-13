@@ -10,11 +10,14 @@ export default class show extends Component {
   static async getInitialProps() {
     const campignCount = await factory.methods.getCampignCount().call();
     const campignCountNum = web3.utils.hexToNumber(campignCount._hex);
-    const campigns = [];
-    for (let i = 0; i < campignCountNum; i++) {
-      const campign = await factory.methods.campigns(i).call();
-      campigns.push(campign);
-    }
+    // let campigns =  Array.from({length : campignCountNum}, (_,i) => i);
+    // console.log(campigns);
+    let campigns = Array.from({length : campignCountNum}, (_,i) => factory.methods.campigns(i).call());
+        campigns = await Promise.all(campigns);
+    // for (let i = 0; i < campignCountNum; i++) {
+    //   const campign = await factory.methods.campigns(i).call();
+    //   campigns.push(campign);
+    // }
     return { campignCount, campigns };
   }
   render() {

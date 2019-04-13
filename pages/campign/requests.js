@@ -18,20 +18,29 @@ class Requests extends Component {
     const manager = await CampaingInstance.methods.manager().call();
     const request = await CampaingInstance.methods.requestCount().call();
     const requestCount = web3.utils.hexToNumber(request._hex);
-    const data = [];
-    for (let i = 1; i <= requestCount; i++) {
-      const request = await CampaingInstance.methods.getRequest(i).call();
-      data.push({
-        id: i,
-        desc: request._desc,
-        beneficary: request._beneficary,
-        value: web3.utils.hexToNumber(request._val._hex),
-        isCompleted: request.isCompleted,
-        appoversCount: web3.utils.hexToNumber(request._contribCount._hex)
-      });
-    }
+    let data = Array.from({length: requestCount}, (_, i) => CampaingInstance.methods.getRequest(i+1).call());
+        data = await Promise.all(data);
+    const tableData = data.map((d, i) => ({
+      id: i+1,
+      desc: d._desc,
+      beneficary: d._beneficary,
+      value: web3.utils.hexToNumber(d._val._hex),
+      isCompleted: d.isCompleted,
+      appoversCount: web3.utils.hexToNumber(d._contribCount._hex)
+    }));
+    // for (let i = 1; i <= requestCount; i++) {
+    //   const request = await CampaingInstance.methods.getRequest(i).call();
+    //   data.push({
+    //     id: i,
+    //     desc: request._desc,
+    //     beneficary: request._beneficary,
+    //     value: web3.utils.hexToNumber(request._val._hex),
+    //     isCompleted: request.isCompleted,
+    //     appoversCount: web3.utils.hexToNumber(request._contribCount._hex)
+    //   });
+    // }
     this.setState({
-      data,
+      data: tableData,
       manager
     });
   }
