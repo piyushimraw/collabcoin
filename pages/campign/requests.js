@@ -13,12 +13,14 @@ class Requests extends Component {
     requestCount: '',
     manager: '',
     open: false,
-    contributorCount: 0
+    contributorCount: 0,
+    account: ''
   };
   async componentDidMount() {
     const { router } = this.props;
     const { query } = router;
     const CampaingInstance = Campign(query.address);
+    const account = await web3.eth.getAccounts();
     const manager = await CampaingInstance.methods.manager().call();
     const contributorCount = await CampaingInstance.methods
       .contributorCount()
@@ -44,11 +46,13 @@ class Requests extends Component {
       data: tableData,
       requestCount,
       contributorCount: web3.utils.hexToNumberString(contributorCount._hex),
-      manager
+      manager,
+      account: account[0]
     });
   }
 
   closeModal = async () => {
+    const CampaingInstance = Campign(query.address);
     const request = await CampaingInstance.methods.requestCount().call();
     const requestCount = web3.utils.hexToNumber(request._hex);
     let data = Array.from({ length: requestCount }, (_, i) =>
@@ -74,7 +78,14 @@ class Requests extends Component {
   };
 
   render() {
-    const { data, requestCount, open, contributorCount } = this.state;
+    const {
+      data,
+      requestCount,
+      open,
+      contributorCount,
+      manager,
+      account
+    } = this.state;
     const { router } = this.props;
     const { query } = router;
     return (
@@ -117,14 +128,16 @@ class Requests extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width="16">
-              <Button
-                floated="right"
-                basic
-                color="teal"
-                onClick={() => this.setState({ open: true })}
-              >
-                Add a New Request
-              </Button>
+              {manager === account && (
+                <Button
+                  floated="right"
+                  basic
+                  color="teal"
+                  onClick={() => this.setState({ open: true })}
+                >
+                  Add a New Request
+                </Button>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
