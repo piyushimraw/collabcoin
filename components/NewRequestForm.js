@@ -7,30 +7,40 @@ export default class NewRequestForm extends Component {
   state = {
     description: '',
     value: '',
-    address: ''
+    address: '',
+    loading: false
   };
   onClickAdd = async () => {
-    const { address: CampingAddress } = this.props;
+    const { address: CampingAddress, onClose } = this.props;
     const CampignInstance = Campign(CampingAddress);
     const { description, value, address } = this.state;
     const account = await web3.eth.getAccounts();
     const valueInEther = web3.utils.toWei(value, 'ether');
+    this.setState({
+      loading: true
+    });
     const newRequest = await CampignInstance.methods
       .createRequest(description, valueInEther, address)
       .send({
         from: account[0]
       });
-    console.log(newRequest);
+    this.setState({
+      loading: false
+    });
+    onClose();
     try {
     } catch (e) {
+      this.setState({
+        loading: false
+      });
       console.log(e);
     }
   };
   render() {
-    const { value, address, description } = this.state;
+    const { value, address, description, loading } = this.state;
     return (
       <Container fluid style={{ margin: 16 }}>
-        <Form>
+        <Form loading={loading}>
           <Form.Field>
             <label>Description</label>
             <Input
@@ -59,10 +69,15 @@ export default class NewRequestForm extends Component {
             />
           </Form.Field>
 
-          <Button color="teal" floated="right" onClick={this.onClickAdd}>
+          <Button
+            color="teal"
+            floated="right"
+            onClick={this.onClickAdd}
+            loading={loading}
+          >
             Add
           </Button>
-          <Button basic color="red" floated="right">
+          <Button basic color="red" floated="right" loading={loading}>
             Cancel
           </Button>
         </Form>
