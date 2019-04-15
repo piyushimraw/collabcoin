@@ -16,16 +16,53 @@ class Requests extends Component {
     contributorCount: 0,
     account: ''
   };
+
   async componentDidMount() {
     const { router } = this.props;
     const { query } = router;
     const CampaingInstance = Campign(query.address);
     const account = await web3.eth.getAccounts();
+    const isContributor = await CampaingInstance.methods
+      .isContributed(account[0])
+      .call();
     const manager = await CampaingInstance.methods.manager().call();
     const contributorCount = await CampaingInstance.methods
       .contributorCount()
       .call();
     const request = await CampaingInstance.methods.requestCount().call();
+    const requestCount = web3.utils.hexToNumber(request._hex);
+    let data = Array.from({ length: requestCount }, (_, i) =>
+      CampaingInstance.methods.getRequest(i + 1, account[0]).call()
+    );
+    data = await Promise.all(data);
+    const tableData = await data.map((d, i) => ({
+      id: i + 1,
+      desc: d._desc,
+      beneficary: d._beneficary,
+      value: web3.utils.fromWei(
+        web3.utils.hexToNumberString(d._val._hex),
+        'ether'
+      ),
+      isCompleted: d.isCompleted,
+      appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
+      canApprove: isContributor && !d.hasApporved
+    }));
+    console.log(tableData);
+    this.setState({
+      data: tableData,
+      requestCount,
+      contributorCount: web3.utils.hexToNumberString(contributorCount._hex),
+      manager,
+      account: account[0]
+    });
+  }
+
+  closeModal = async () => {
+    const { router } = this.props;
+    const { query } = router;
+    const CampaingInstance = Campign(query.address);
+    const request = await CampaingInstance.methods.requestCount().call();
+    const account = await web3.eth.getAccounts();
     const requestCount = web3.utils.hexToNumber(request._hex);
     let data = Array.from({ length: requestCount }, (_, i) =>
       CampaingInstance.methods.getRequest(i + 1, account[0]).call()
@@ -40,35 +77,8 @@ class Requests extends Component {
         'ether'
       ),
       isCompleted: d.isCompleted,
-      appoversCount: web3.utils.hexToNumber(d._contribCount._hex)
-    }));
-    this.setState({
-      data: tableData,
-      requestCount,
-      contributorCount: web3.utils.hexToNumberString(contributorCount._hex),
-      manager,
-      account: account[0]
-    });
-  }
-
-  closeModal = async () => {
-    const CampaingInstance = Campign(query.address);
-    const request = await CampaingInstance.methods.requestCount().call();
-    const requestCount = web3.utils.hexToNumber(request._hex);
-    let data = Array.from({ length: requestCount }, (_, i) =>
-      CampaingInstance.methods.getRequest(i + 1).call()
-    );
-    data = await Promise.all(data);
-    const tableData = data.map((d, i) => ({
-      id: i + 1,
-      desc: d._desc,
-      beneficary: d._beneficary,
-      value: web3.utils.fromWei(
-        web3.utils.hexToNumberString(d._val._hex),
-        'ether'
-      ),
-      isCompleted: d.isCompleted,
-      appoversCount: web3.utils.hexToNumber(d._contribCount._hex)
+      appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
+      hasApproved: d.hasApproved
     }));
     this.setState({
       data: tableData,
@@ -115,7 +125,9 @@ class Requests extends Component {
                         {data.appoversCount}/{contributorCount}
                       </Table.Cell>
                       <Table.Cell>
-                        <Button color="green">Approve</Button>
+                        <Button color="green" disabled={!data.canApprove}>
+                          Approve
+                        </Button>
                         <Button color="teal" disabled>
                           Finalize
                         </Button>
