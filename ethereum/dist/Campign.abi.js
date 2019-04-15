@@ -1,11 +1,30 @@
 export default [
   {
-    constant: false,
+    constant: true,
     inputs: [],
-    name: 'contribute',
-    outputs: [],
-    payable: true,
-    stateMutability: 'payable',
+    name: 'manager',
+    outputs: [
+      {
+        name: '',
+        type: 'address'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'requestCount',
+    outputs: [
+      {
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -31,19 +50,32 @@ export default [
     type: 'function'
   },
   {
+    constant: false,
+    inputs: [],
+    name: 'contribute',
+    outputs: [],
+    payable: true,
+    stateMutability: 'payable',
+    type: 'function'
+  },
+  {
+    constant: true,
     inputs: [
-      {
-        name: 'value',
-        type: 'uint256'
-      },
       {
         name: 'sender',
         type: 'address'
       }
     ],
+    name: 'isContributed',
+    outputs: [
+      {
+        name: '_isContributed',
+        type: 'bool'
+      }
+    ],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'constructor'
+    stateMutability: 'view',
+    type: 'function'
   },
   {
     constant: true,
@@ -61,10 +93,28 @@ export default [
   },
   {
     constant: true,
+    inputs: [],
+    name: 'minimumVal',
+    outputs: [
+      {
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    constant: true,
     inputs: [
       {
         name: 'id',
         type: 'uint256'
+      },
+      {
+        name: 'contributor',
+        type: 'address'
       }
     ],
     name: 'getRequest',
@@ -88,6 +138,10 @@ export default [
       {
         name: 'isCompleted',
         type: 'bool'
+      },
+      {
+        name: 'hasApporved',
+        type: 'bool'
       }
     ],
     payable: false,
@@ -95,45 +149,18 @@ export default [
     type: 'function'
   },
   {
-    constant: true,
-    inputs: [],
-    name: 'manager',
-    outputs: [
+    inputs: [
       {
-        name: '',
+        name: 'value',
+        type: 'uint256'
+      },
+      {
+        name: 'sender',
         type: 'address'
       }
     ],
     payable: false,
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'minimumVal',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'requestCount',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function'
+    stateMutability: 'nonpayable',
+    type: 'constructor'
   }
 ];

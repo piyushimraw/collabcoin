@@ -28,7 +28,7 @@ class Requests extends Component {
     const request = await CampaingInstance.methods.requestCount().call();
     const requestCount = web3.utils.hexToNumber(request._hex);
     let data = Array.from({ length: requestCount }, (_, i) =>
-      CampaingInstance.methods.getRequest(i + 1).call()
+      CampaingInstance.methods.getRequest(i + 1, account[0]).call()
     );
     data = await Promise.all(data);
     const tableData = data.map((d, i) => ({
