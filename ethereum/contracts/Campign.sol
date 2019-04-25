@@ -48,6 +48,22 @@ contract Campign {
     requests[requestCount] = tempreq;
   }
 
+  modifier isContributor() {
+    require(isContributed(msg.sender), "Not a Contributor");
+    _;
+  }
+
+  modifier haveNotApproved(uint reqId) {
+    require(requests[reqId].approvers[msg.sender] == false , "Already Approved");
+    _;
+  }
+  // can approve only if approver is a contributor and has not
+  // approved previously
+  function approveRequest(uint reqId) public isContributor haveNotApproved(reqId) {
+    requests[reqId].approvers[msg.sender] = true;
+    requests[reqId].approversCount = requests[reqId].approversCount + 1;
+  } 
+
 }
 
 
