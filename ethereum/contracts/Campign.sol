@@ -1,4 +1,6 @@
 pragma solidity >=0.4.22 <0.7.0;
+
+
 contract Campign {
   struct Request {
     string description;
@@ -20,7 +22,7 @@ contract Campign {
     minimumVal = value;
   }
 
-  function isContributed (address sender) private view returns(bool){
+  function isContributed (address sender) public view returns(bool _isContributed){
     return contributors[sender];
   }
 
@@ -34,9 +36,9 @@ contract Campign {
     }
   }
 
-  function getRequest(uint id) public view returns(string memory _desc, uint _val, address _beneficary, uint _contribCount, bool isCompleted) {
-    Request memory tempRequest = requests[id];
-    return (tempRequest.description,tempRequest.value, tempRequest.beneficiary, tempRequest.approversCount, tempRequest.completed);
+  function getRequest(uint id, address contributor) public view returns(string memory _desc, uint _val, address _beneficary, uint _contribCount, bool isCompleted, bool hasApporved) {
+    Request storage tempRequest = requests[id];
+    return (tempRequest.description,tempRequest.value, tempRequest.beneficiary, tempRequest.approversCount, tempRequest.completed, tempRequest.approvers[contributor]);
   }
 
   function createRequest(string memory desc, uint val, address payable ben) public {
@@ -48,6 +50,7 @@ contract Campign {
     requests[requestCount] = tempreq;
   }
 
+<<<<<<< HEAD
   modifier isContributor() {
     require(isContributed(msg.sender), "Not a Contributor");
     _;
@@ -66,7 +69,10 @@ contract Campign {
 
 }
 
+=======
+>>>>>>> 5a1526ba2f17a18e75848bbfd0ff2ee8f65a92bb
 
+}
 contract CampignFactory {
     Campign[] public campigns;
 
@@ -74,28 +80,8 @@ contract CampignFactory {
         Campign newCampign = new Campign(value, msg.sender);
         campigns.push(newCampign);
     }
+
+    function getCampignCount () public view returns(uint) {
+        return campigns.length;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
