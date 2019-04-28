@@ -50,7 +50,6 @@ contract Campign {
     requests[requestCount] = tempreq;
   }
 
-<<<<<<< HEAD
   modifier isContributor() {
     require(isContributed(msg.sender), "Not a Contributor");
     _;
@@ -66,12 +65,6 @@ contract Campign {
     requests[reqId].approvers[msg.sender] = true;
     requests[reqId].approversCount = requests[reqId].approversCount + 1;
   } 
-
-}
-
-=======
->>>>>>> 5a1526ba2f17a18e75848bbfd0ff2ee8f65a92bb
-
 }
 contract CampignFactory {
     Campign[] public campigns;
