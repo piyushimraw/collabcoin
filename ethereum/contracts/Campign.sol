@@ -61,10 +61,10 @@ contract Campign {
   }
   // can approve only if approver is a contributor and has not
   // approved previously
-  function approveRequest(uint reqId) public isContributor haveNotApproved(reqId) {
+  function approveRequest(uint reqId) public  {
     requests[reqId].approvers[msg.sender] = true;
     requests[reqId].approversCount = requests[reqId].approversCount + 1;
-  } 
+  }
 }
 contract CampignFactory {
     Campign[] public campigns;

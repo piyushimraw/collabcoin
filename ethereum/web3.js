@@ -7,7 +7,8 @@ let web3 = new Web3(provider, null, { transactionConfirmationBlocks: 1 });
 if (typeof window !== 'undefined') {
   if (typeof window.ethereum !== 'undefined')
     web3 = new Web3(window.ethereum, null, {
-      transactionConfirmationBlocks: 1
+      transactionConfirmationBlocks: 1,
+      defaultGas: 4712388
     });
 }
 

@@ -87,6 +87,24 @@ class Requests extends Component {
     });
   };
 
+  approveRequest = async id => {
+    try {
+      const { router } = this.props;
+      const { query } = router;
+      const CampaingInstance = Campign(query.address);
+      const account = await web3.eth.getAccounts();
+      console.log(id, account);
+      const approvedRequest = await CampaingInstance.methods
+        .approveRequest(id)
+        .send({
+          from: account[0]
+        });
+      console.log(approvedRequest);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   render() {
     const {
       data,
@@ -125,7 +143,11 @@ class Requests extends Component {
                         {data.appoversCount}/{contributorCount}
                       </Table.Cell>
                       <Table.Cell>
-                        <Button color="green" disabled={!data.canApprove}>
+                        <Button
+                          color="green"
+                          disabled={!data.canApprove}
+                          onClick={() => this.approveRequest(data.id)}
+                        >
                           Approve
                         </Button>
                         <Button color="teal" disabled>
