@@ -63,6 +63,9 @@ class Requests extends Component {
     const CampaingInstance = Campign(query.address);
     const request = await CampaingInstance.methods.requestCount().call();
     const account = await web3.eth.getAccounts();
+    const isContributor = await CampaingInstance.methods
+      .isContributed(account[0])
+      .call();
     const requestCount = web3.utils.hexToNumber(request._hex);
     let data = Array.from({ length: requestCount }, (_, i) =>
       CampaingInstance.methods.getRequest(i + 1, account[0]).call()
@@ -78,7 +81,8 @@ class Requests extends Component {
       ),
       isCompleted: d.isCompleted,
       appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
-      hasApproved: d.hasApproved
+      hasApproved: d.hasApproved,
+      canApprove: isContributor && !d.hasApporved
     }));
     this.setState({
       data: tableData,
@@ -89,6 +93,10 @@ class Requests extends Component {
 
   approveRequest = async id => {
     try {
+      this.setState({
+        loading: true
+      });
+      const { data } = this.state;
       const { router } = this.props;
       const { query } = router;
       const CampaingInstance = Campign(query.address);
@@ -99,9 +107,25 @@ class Requests extends Component {
         .send({
           from: account[0]
         });
-      console.log(approvedRequest);
+      const newTableData = data.map(obj => {
+        if (obj.id === id) {
+          return {
+            ...obj,
+            hasApproved: true,
+            appoversCount: obj.appoversCount + 1,
+            canApprove: false
+          };
+        }
+        return obj;
+      });
+      console.log(newTableData);
+      this.setState({
+        loading: false,
+        data: newTableData
+      });
     } catch (e) {
       console.log(e);
+      this.setState({ loading: false });
     }
   };
 
@@ -112,7 +136,8 @@ class Requests extends Component {
       open,
       contributorCount,
       manager,
-      account
+      account,
+      loading
     } = this.state;
     const { router } = this.props;
     const { query } = router;
@@ -144,6 +169,7 @@ class Requests extends Component {
                       </Table.Cell>
                       <Table.Cell>
                         <Button
+                          loading={loading}
                           color="green"
                           disabled={!data.canApprove}
                           onClick={() => this.approveRequest(data.id)}
