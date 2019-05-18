@@ -45,7 +45,12 @@ class Requests extends Component {
       ),
       isCompleted: d.isCompleted,
       appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
-      canApprove: isContributor && !d.hasApporved
+      canApprove: isContributor && !d.hasApporved,
+      canFinalize:
+        manager === account[0] &&
+        web3.utils.hexToNumber(d._contribCount._hex) >
+          web3.utils.hexToNumberString(contributorCount._hex) / 2 &&
+        !d.completed
     }));
     console.log(tableData);
     this.setState({
@@ -129,6 +134,45 @@ class Requests extends Component {
     }
   };
 
+  finalizeRequest = async id => {
+    try {
+      this.setState({
+        loading: true
+      });
+      const { data } = this.state;
+      const { router } = this.props;
+      const { query } = router;
+      const CampaingInstance = Campign(query.address);
+      const account = await web3.eth.getAccounts();
+      const finalizeRequest = await CampaingInstance.methods
+        .finalizeRequest(id)
+        .send({
+          from: account[0]
+        });
+
+      const newTableData = data.map(obj => {
+        if (obj.id === id) {
+          return {
+            ...obj,
+            hasApproved: true,
+            canApprove: false,
+            completed: true
+          };
+        }
+        return obj;
+      });
+      this.setState({
+        loading: false,
+        data: newTableData
+      });
+    } catch (e) {
+      console.log(e);
+      this.setState({
+        loading: false
+      });
+    }
+  };
+
   render() {
     const {
       data,
@@ -176,7 +220,12 @@ class Requests extends Component {
                         >
                           Approve
                         </Button>
-                        <Button color="teal" disabled>
+                        <Button
+                          color="teal"
+                          loading={loading}
+                          disabled={!data.canFinalize}
+                          onClick={() => this.finalizeRequest(data.id)}
+                        >
                           Finalize
                         </Button>
                       </Table.Cell>

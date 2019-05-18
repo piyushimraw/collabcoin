@@ -65,6 +65,13 @@ contract Campign {
     requests[reqId].approvers[msg.sender] = true;
     requests[reqId].approversCount = requests[reqId].approversCount + 1;
   }
+
+  //finalize request if all conditions meet
+  function finalizeRequest(uint reqId) public payable {
+    require((requests[reqId].approversCount) > contributorCount / 2);
+    requests[reqId].beneficiary.transfer(requests[reqId].value);
+    requests[reqId].completed = true;
+  }
 }
 contract CampignFactory {
     Campign[] public campigns;
