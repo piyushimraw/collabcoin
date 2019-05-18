@@ -154,9 +154,8 @@ class Requests extends Component {
         if (obj.id === id) {
           return {
             ...obj,
-            hasApproved: true,
-            canApprove: false,
-            completed: true
+            isCompleted: true,
+            canFinalize: false
           };
         }
         return obj;
@@ -203,7 +202,7 @@ class Requests extends Component {
                 }
                 renderBodyRow={(data, index) => {
                   return (
-                    <Table.Row key={data.id}>
+                    <Table.Row key={data.id} disabled={data.isCompleted}>
                       <Table.Cell>{data.id}</Table.Cell>
                       <Table.Cell>{data.desc}</Table.Cell>
                       <Table.Cell>{data.beneficary}</Table.Cell>
