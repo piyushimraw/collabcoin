@@ -50,7 +50,7 @@ class Requests extends Component {
         manager === account[0] &&
         web3.utils.hexToNumber(d._contribCount._hex) >
           web3.utils.hexToNumberString(contributorCount._hex) / 2 &&
-        !d.completed
+        !d.isCompleted
     }));
     console.log(tableData);
     this.setState({

@@ -68,9 +68,10 @@ contract Campign {
 
   //finalize request if all conditions meet
   function finalizeRequest(uint reqId) public payable {
-    require((requests[reqId].approversCount) > contributorCount / 2);
-    requests[reqId].beneficiary.transfer(requests[reqId].value);
-    requests[reqId].completed = true;
+     Request storage r = requests[reqId];
+    require((r.approversCount) > contributorCount / 2);
+    r.beneficiary.transfer(r.value);
+    r.completed = true;
   }
 }
 contract CampignFactory {
