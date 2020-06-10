@@ -13,6 +13,9 @@
   "main": "index.js",
   "author": "piyushimraw <piyush.srivastavaimraw@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
