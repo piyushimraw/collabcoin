@@ -14,12 +14,13 @@ class Requests extends Component {
     manager: '',
     open: false,
     contributorCount: 0,
-    account: ''
+    account: '',
   };
 
   async componentDidMount() {
     const { router } = this.props;
     const { query } = router;
+    console.log(query);
     const CampaingInstance = Campign(query.address);
     const account = await web3.eth.getAccounts();
     const isContributor = await CampaingInstance.methods
@@ -50,7 +51,7 @@ class Requests extends Component {
         manager === account[0] &&
         web3.utils.hexToNumber(d._contribCount._hex) >
           web3.utils.hexToNumberString(contributorCount._hex) / 2 &&
-        !d.isCompleted
+        !d.isCompleted,
     }));
     console.log(tableData);
     this.setState({
@@ -58,7 +59,7 @@ class Requests extends Component {
       requestCount,
       contributorCount: web3.utils.hexToNumberString(contributorCount._hex),
       manager,
-      account: account[0]
+      account: account[0],
     });
   }
 
@@ -87,19 +88,19 @@ class Requests extends Component {
       isCompleted: d.isCompleted,
       appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
       hasApproved: d.hasApproved,
-      canApprove: isContributor && !d.hasApporved
+      canApprove: isContributor && !d.hasApporved,
     }));
     this.setState({
       data: tableData,
       requestCount,
-      open: false
+      open: false,
     });
   };
 
-  approveRequest = async id => {
+  approveRequest = async (id) => {
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
       const { data } = this.state;
       const { router } = this.props;
@@ -110,15 +111,15 @@ class Requests extends Component {
       const approvedRequest = await CampaingInstance.methods
         .approveRequest(id)
         .send({
-          from: account[0]
+          from: account[0],
         });
-      const newTableData = data.map(obj => {
+      const newTableData = data.map((obj) => {
         if (obj.id === id) {
           return {
             ...obj,
             hasApproved: true,
             appoversCount: obj.appoversCount + 1,
-            canApprove: false
+            canApprove: false,
           };
         }
         return obj;
@@ -126,7 +127,7 @@ class Requests extends Component {
       console.log(newTableData);
       this.setState({
         loading: false,
-        data: newTableData
+        data: newTableData,
       });
     } catch (e) {
       console.log(e);
@@ -134,10 +135,10 @@ class Requests extends Component {
     }
   };
 
-  finalizeRequest = async id => {
+  finalizeRequest = async (id) => {
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
       const { data } = this.state;
       const { router } = this.props;
@@ -147,27 +148,27 @@ class Requests extends Component {
       const finalizeRequest = await CampaingInstance.methods
         .finalizeRequest(id)
         .send({
-          from: account[0]
+          from: account[0],
         });
 
-      const newTableData = data.map(obj => {
+      const newTableData = data.map((obj) => {
         if (obj.id === id) {
           return {
             ...obj,
             isCompleted: true,
-            canFinalize: false
+            canFinalize: false,
           };
         }
         return obj;
       });
       this.setState({
         loading: false,
-        data: newTableData
+        data: newTableData,
       });
     } catch (e) {
       console.log(e);
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   };
@@ -180,7 +181,7 @@ class Requests extends Component {
       contributorCount,
       manager,
       account,
-      loading
+      loading,
     } = this.state;
     const { router } = this.props;
     const { query } = router;

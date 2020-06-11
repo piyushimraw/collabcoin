@@ -16,7 +16,7 @@ class Show extends Component {
     requestCount: '',
     minimumVal: '',
     submitting: false,
-    submissionMessage: ''
+    submissionMessage: '',
   };
   async componentDidMount() {
     const { router } = this.props;
@@ -25,27 +25,25 @@ class Show extends Component {
     try {
       const manager = await CampaingInstance.methods.manager().call();
       const balance = await web3.eth.getBalance(query.address);
-      const request = await CampaingInstance.methods.requestCount().call();
-      const contributorCountHex = await CampaingInstance.methods
+      const requestCount = await CampaingInstance.methods.requestCount().call();
+      const contributorCount = await CampaingInstance.methods
         .contributorCount()
         .call();
       const minimumVal = await CampaingInstance.methods.minimumVal().call();
-      const contributorCount = web3.utils.hexToNumber(contributorCountHex._hex);
-      const requestCount = web3.utils.hexToNumber(request._hex);
       this.setState({
         loading: false,
         manager,
         balance: web3.utils.fromWei(balance, 'ether'),
         requestCount,
         minimumVal: web3.utils.hexToNumberString(minimumVal._hex),
-        contributorCount
+        contributorCount,
       });
     } catch (e) {}
   }
 
-  contribute = async value => {
+  contribute = async (value) => {
     this.setState({
-      submitting: true
+      submitting: true,
     });
     const newValue = web3.utils.toWei(value, 'ether');
     const { router } = this.props;
@@ -58,16 +56,16 @@ class Show extends Component {
           .contribute()
           .send({
             from: accounts[0],
-            value: newValue
+            value: newValue,
           })
-          .on('transactionHash', hash => {
+          .on('transactionHash', (hash) => {
             this.setState({
-              submissionMessage: `trasaction is being hashed ${hash}`
+              submissionMessage: `trasaction is being hashed ${hash}`,
             });
           })
           .on('confirmation', (number, reciept) =>
             this.setState({
-              submissionMessage: `${number} out of 10 confirmations Done!!`
+              submissionMessage: `${number} out of 10 confirmations Done!!`,
             })
           );
         const contributorCountHex = await CampaingInstance.methods
@@ -81,12 +79,12 @@ class Show extends Component {
           submitting: false,
           balance: web3.utils.fromWei(balance, 'ether'),
           contributorCount,
-          submissionMessage: ''
+          submissionMessage: '',
         });
       }
     } catch (e) {
       this.setState({
-        submitting: false
+        submitting: false,
       });
     }
   };
@@ -101,7 +99,7 @@ class Show extends Component {
       minimumVal,
       requestCount,
       submitting,
-      submissionMessage
+      submissionMessage,
     } = this.state;
     submissionMessage;
     return (
@@ -133,7 +131,7 @@ class Show extends Component {
                 <PlaceHolderCard
                   onClick={() =>
                     Router.replace(`
-                  /campign/${query.address}/requests
+                  /campign/show/requests?address=${query.address}
                   `)
                   }
                   loading={loading}
