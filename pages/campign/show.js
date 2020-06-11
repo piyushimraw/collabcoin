@@ -6,6 +6,7 @@ import ContributeForm from '../../components/ContributeForm';
 import Layout from '../../components/Layout/Layout';
 import Campign from '../../ethereum/Campign';
 import web3 from '../../ethereum/web3';
+import Link from 'next/link';
 
 class Show extends Component {
   state = {
@@ -130,9 +131,10 @@ class Show extends Component {
                 />
                 <PlaceHolderCard
                   onClick={() =>
-                    Router.push(`
-                  /campign/show/requests?address=${query.address}
-                  `)
+                    Router.push({
+                      pathname: `/campign/requests`,
+                      query: { address: query.address },
+                    })
                   }
                   loading={loading}
                   cardHeader="Requests"
