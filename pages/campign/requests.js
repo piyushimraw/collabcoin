@@ -20,8 +20,10 @@ class Requests extends Component {
   async componentDidMount() {
     const { router } = this.props;
     const { query } = router;
-    console.log(query);
-    const CampaingInstance = Campign(query.address);
+    const address = query?.address;
+    console.log(query.address);
+    const CampaingInstance = Campign(address);
+    await window.ethereum.enable();
     const account = await web3.eth.getAccounts();
     const isContributor = await CampaingInstance.methods
       .isContributed(account[0])
@@ -30,8 +32,7 @@ class Requests extends Component {
     const contributorCount = await CampaingInstance.methods
       .contributorCount()
       .call();
-    const request = await CampaingInstance.methods.requestCount().call();
-    const requestCount = web3.utils.hexToNumber(request._hex);
+    const requestCount = await CampaingInstance.methods.requestCount().call();
     let data = Array.from({ length: requestCount }, (_, i) =>
       CampaingInstance.methods.getRequest(i + 1, account[0]).call()
     );
@@ -40,17 +41,14 @@ class Requests extends Component {
       id: i + 1,
       desc: d._desc,
       beneficary: d._beneficary,
-      value: web3.utils.fromWei(
-        web3.utils.hexToNumberString(d._val._hex),
-        'ether'
-      ),
+      value: web3.utils.fromWei(new web3.utils.BN(d._val._hex), 'ether'),
       isCompleted: d.isCompleted,
-      appoversCount: web3.utils.hexToNumber(d._contribCount._hex),
+      appoversCount: web3.utils.hexToNumberString(d._contribCount._hex),
       canApprove: isContributor && !d.hasApporved,
       canFinalize:
         manager === account[0] &&
         web3.utils.hexToNumber(d._contribCount._hex) >
-          web3.utils.hexToNumberString(contributorCount._hex) / 2 &&
+          web3.utils.hexToNumber(contributorCount._hex) / 2 &&
         !d.isCompleted,
     }));
     console.log(tableData);

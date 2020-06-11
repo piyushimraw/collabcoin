@@ -130,7 +130,7 @@ class Show extends Component {
                 />
                 <PlaceHolderCard
                   onClick={() =>
-                    Router.replace(`
+                    Router.push(`
                   /campign/show/requests?address=${query.address}
                   `)
                   }
