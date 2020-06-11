@@ -8,20 +8,21 @@ import CampignCard from '../components/CampignCard';
 
 export default class show extends Component {
   static async getInitialProps() {
-    const campignCount = await factory.methods.getCampignCount().call();
-    const campignCountNum = web3.utils.hexToNumber(campignCount._hex);
+    const campignCountNum = await factory.methods.getCampignCount().call();
     // let campigns =  Array.from({length : campignCountNum}, (_,i) => i);
     // console.log(campigns);
-    let campigns = Array.from({length : campignCountNum}, (_,i) => factory.methods.campigns(i).call());
-        campigns = await Promise.all(campigns);
+    let campigns = Array.from({ length: campignCountNum }, (_, i) =>
+      factory.methods.campigns(i).call()
+    );
+    campigns = await Promise.all(campigns);
     // for (let i = 0; i < campignCountNum; i++) {
     //   const campign = await factory.methods.campigns(i).call();
     //   campigns.push(campign);
     // }
-    return { campignCount, campigns };
+    return { campignCountNum, campigns };
   }
   render() {
-    const { campignCount, campigns } = this.props;
+    const { campignCountNum, campigns } = this.props;
     return (
       <Layout>
         <Header as="h3">
