@@ -14,7 +14,7 @@
   "author": "piyushimraw <piyush.srivastavaimraw@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "scripts": {
     "dev": "node server.js",
